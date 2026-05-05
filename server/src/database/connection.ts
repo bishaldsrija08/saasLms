@@ -12,18 +12,17 @@ const sequelize = new Sequelize({
 });
 
 sequelize.authenticate()
-    .then(() => {
-        console.log("Database connection established successfully.");
-    })
-    .catch((error) => {
-        console.error("Unable to connect to the database:", error);
-    })
-
-export default sequelize;
-
-// Migration
-sequelize.sync({
-    alter: false
-}).then(() => {
-    console.log("All models were synchronized successfully.");
+.then(()=>{
+    console.log("Authenticated, connected")
 })
+.catch((error)=>{
+    console.log(error)
+})
+
+// migrate garnu parxa/ push garnu parxa 
+sequelize.sync({alter: true})
+.then(()=>{
+    console.log("migrated successfully new changes")
+})
+
+export default sequelize
