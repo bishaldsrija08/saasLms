@@ -3,13 +3,13 @@ import sequelize from "../../../database/connection";
 import { IExtendedRequest } from "../../../middleware/type";
 
 const createCourse = (req: IExtendedRequest, res: Response) => {
-    const instituteNumber = req.instituteNumber;
+    const instituteNumber = req.user?.currentInstituteNumber;
     const { courseName, coursePrice, courseDuration, courseLevel, courseDescription } = req.body;
     if (!courseName || !coursePrice || !courseDuration || !courseLevel || !courseDescription) {
         return res.status(400).json({ message: "All fields are required" })
     }
 
-    const courseThumbnail = null;
+    const courseThumbnail =  req.file ? req.file.filename : null;
 
     sequelize.query(`INSERT INTO course_${instituteNumber}(courseName, coursePrice, courseDuration, courseLevel, courseDescription, courseThumbnail) VALUES (?, ?, ?, ?, ?, ?)`, {
         replacements: [courseName, coursePrice, courseDuration, courseLevel, courseDescription, courseThumbnail]
@@ -19,7 +19,7 @@ const createCourse = (req: IExtendedRequest, res: Response) => {
 }
 
 const deleteCourse = async (req: IExtendedRequest, res: Response) => {
-    const instituteNumber = req.instituteNumber;
+    const instituteNumber = req.user?.currentInstituteNumber;
     const courseId = req.params.id;
     // Check if course exists
     const [courseData] = await sequelize.query(`SELECT * FROM course_${instituteNumber} WHERE id = ?`, {
@@ -39,7 +39,7 @@ const deleteCourse = async (req: IExtendedRequest, res: Response) => {
 // Get all courses of an institute
 
 const getAllCourses = async (req: IExtendedRequest, res: Response) => {
-    const instituteNumber = req.instituteNumber;
+    const instituteNumber = req.user?.currentInstituteNumber;
     const [courses] = await sequelize.query(`SELECT * FROM course_${instituteNumber}`)
     res.status(200).json({
         data: courses || [],
@@ -49,7 +49,7 @@ const getAllCourses = async (req: IExtendedRequest, res: Response) => {
 
 // Single course
 const getSingleCourse = async (req: IExtendedRequest, res: Response) => {
-    const instituteNumber = req.instituteNumber;
+    const instituteNumber = req.user?.currentInstituteNumber;
     const courseId = req.params.id;
     const [courseData] = await sequelize.query(`SELECT * FROM course_${instituteNumber} WHERE id = ?`, {
         replacements: [courseId]

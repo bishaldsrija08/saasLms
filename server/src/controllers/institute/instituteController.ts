@@ -5,6 +5,7 @@ import { IExtendedRequest } from "../../middleware/type";
 import User from "../../database/models/userModel";
 import categories from "../../seed";
 import { QueryTypes } from "sequelize";
+import string from "figlet/fonts/babyface-lame";
 class InstituteController {
     static async createInstitute(req: IExtendedRequest, res: Response, next: NextFunction) {
         const { instituteName, instituteEmail, institutePhoneNumber, instituteAddress } = req.body
@@ -49,7 +50,7 @@ class InstituteController {
                 replacements: [req.user?.id, instituteNumber]
             })
             await User.update({
-                currentInstituteNumber: instituteNumber,
+                currentInstituteNumber: String(instituteNumber),
                 role: "institute"
             }, {
                 where: { id: req.user.id }
@@ -69,7 +70,7 @@ class InstituteController {
               salary VARCHAR(100),
               teacherPhoto VARCHAR(255), 
               teacherPassword VARCHAR(255),
-              courseId VARCHAR(100) REFERENCES course_${instituteNumber}(id), // which course teacher is teaching
+              courseId VARCHAR(100) REFERENCES course_${instituteNumber}(id),
               createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
               updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
               )`)
@@ -99,8 +100,8 @@ class InstituteController {
         courseLevel ENUM('beginner','intermediate','advance') NOT NULL, 
         courseThumbnail VARCHAR(200),
         courseDescription TEXT, 
-        teacherId VARCHAR(36) REFERENCES teacher_${instituteNumber}(id), // which teacher is teaching the course
-        categoryId VARCHAR(36) NOT NULL REFERENCES category_${instituteNumber} (id), // which category course belongs to
+        teacherId VARCHAR(36) REFERENCES teacher_${instituteNumber}(id),
+        categoryId VARCHAR(36) NOT NULL REFERENCES category_${instituteNumber} (id),
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )`)
@@ -131,7 +132,7 @@ class InstituteController {
         lessonDescription TEXT, 
         lessonVideoUrl VARCHAR(200) NOT NULL, 
         lessonThumbnailUrl VARCHAR(200) NOT NULL, 
-        chapterId VARCHAR(36) REFERENCES course_chapter_${instituteNumber}(id) ON DELETE CASCADE ON UPDATE CASCADE, // which chapter lesson belongs to
+        chapterId VARCHAR(36) REFERENCES course_chapter_${instituteNumber}(id) ON DELETE CASCADE ON UPDATE CASCADE,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
