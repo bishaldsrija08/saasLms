@@ -9,7 +9,7 @@ const createCourse = (req: IExtendedRequest, res: Response) => {
         return res.status(400).json({ message: "All fields are required" })
     }
 
-    const courseThumbnail =  req.file ? req.file.filename : null;
+    const courseThumbnail =  req.file ? req.file.path : null;
 
     sequelize.query(`INSERT INTO course_${instituteNumber}(courseName, coursePrice, courseDuration, courseLevel, courseDescription, courseThumbnail) VALUES (?, ?, ?, ?, ?, ?)`, {
         replacements: [courseName, coursePrice, courseDuration, courseLevel, courseDescription, courseThumbnail]
