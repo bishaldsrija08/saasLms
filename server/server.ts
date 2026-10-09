@@ -3,6 +3,9 @@
 import app from "./src/app";
 import envConfig from "./src/confit/config";
 
+// Database connection
+import "./src/database/connection";
+
 
 
 
