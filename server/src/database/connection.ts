@@ -20,7 +20,7 @@ export async function initializeDatabase() {
     })
 
     // Migrate models to the database
-    await sequelize.sync({ alter: true }).then(() => {
+    await sequelize.sync({ alter: false }).then(() => {
         console.log("Database synchronized successfully")
     }).catch((error) => {
         console.error("Error synchronizing database:", error)
